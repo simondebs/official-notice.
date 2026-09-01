@@ -1,0 +1,619 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#fff7fb">
+  <meta name="description" content="A very serious application for a very cute personal assistant.">
+  <title>Private Office Recruitment 💌</title>
+  <style>
+    :root {
+      --ink: #35262e;
+      --muted: #76616c;
+      --paper: rgba(255, 255, 255, .88);
+      --pink: #ec5f91;
+      --pink-dark: #c83e72;
+      --peach: #ffb18b;
+      --cream: #fff9f3;
+      --line: #f0d7e1;
+      --shadow: 0 22px 70px rgba(143, 52, 91, .16);
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      min-height: 100%;
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100%;
+      min-height: 100dvh;
+      overflow-x: hidden;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 10% 8%, rgba(255, 185, 211, .58), transparent 26rem),
+        radial-gradient(circle at 95% 30%, rgba(255, 204, 165, .52), transparent 28rem),
+        linear-gradient(145deg, #fff8fb 0%, #fffaf4 52%, #fff1f7 100%);
+      font-family: ui-rounded, "SF Pro Rounded", "Avenir Next", Avenir, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .28;
+      background-image: radial-gradient(#e06e98 1px, transparent 1px);
+      background-size: 22px 22px;
+      mask-image: linear-gradient(to bottom, black, transparent 72%);
+      -webkit-mask-image: linear-gradient(to bottom, black, transparent 72%);
+    }
+
+    button, input, select, textarea { font: inherit; }
+
+    .page {
+      position: relative;
+      width: min(100% - 28px, 760px);
+      margin: 0 auto;
+      padding: max(24px, env(safe-area-inset-top)) 0 max(48px, env(safe-area-inset-bottom));
+    }
+
+    .topline {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin: 0 6px 14px;
+      color: var(--muted);
+      font-size: .76rem;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .status::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #52bb7a;
+      box-shadow: 0 0 0 4px rgba(82, 187, 122, .15);
+    }
+
+    .card {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, .86);
+      border-radius: 30px;
+      background: var(--paper);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+    }
+
+    .hero {
+      padding: clamp(30px, 7vw, 58px) clamp(22px, 7vw, 58px) 34px;
+      text-align: center;
+      background:
+        linear-gradient(rgba(255,255,255,.38), rgba(255,255,255,.38)),
+        radial-gradient(circle at 50% 0%, #ffd6e6, transparent 68%);
+    }
+
+    .stamp {
+      display: inline-block;
+      padding: 7px 12px;
+      transform: rotate(-2deg);
+      border: 2px solid var(--pink);
+      border-radius: 9px;
+      color: var(--pink-dark);
+      font-size: .72rem;
+      font-weight: 900;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+
+    .hero-emoji {
+      display: block;
+      margin: 20px auto 8px;
+      font-size: clamp(2.7rem, 9vw, 4.5rem);
+      filter: drop-shadow(0 8px 9px rgba(192, 61, 111, .16));
+      animation: float 3.2s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(-2deg); }
+      50% { transform: translateY(-7px) rotate(2deg); }
+    }
+
+    h1 {
+      max-width: 620px;
+      margin: 6px auto 14px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.25rem, 8vw, 4.25rem);
+      line-height: .98;
+      letter-spacing: -.045em;
+    }
+
+    .subtitle {
+      max-width: 530px;
+      margin: 0 auto;
+      color: var(--muted);
+      font-size: clamp(1rem, 3.5vw, 1.16rem);
+    }
+
+    .tiny-note {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 8px 13px;
+      border-radius: 999px;
+      background: white;
+      color: var(--pink-dark);
+      font-size: .82rem;
+      font-weight: 800;
+      box-shadow: 0 5px 20px rgba(156, 60, 99, .08);
+    }
+
+    .section {
+      padding: 30px clamp(20px, 6vw, 48px);
+      border-top: 1px solid var(--line);
+    }
+
+    .section h2 {
+      margin: 0 0 7px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(1.45rem, 5vw, 2rem);
+      letter-spacing: -.025em;
+    }
+
+    .eyebrow {
+      margin: 0 0 5px;
+      color: var(--pink-dark);
+      font-size: .72rem;
+      font-weight: 900;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+
+    .role-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .perk {
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255, 250, 247, .78);
+    }
+
+    .perk .icon { font-size: 1.45rem; }
+    .perk strong { display: block; margin: 5px 0 2px; }
+    .perk span { color: var(--muted); font-size: .9rem; }
+
+    .requirements {
+      display: grid;
+      gap: 11px;
+      margin: 20px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .requirements li {
+      display: flex;
+      align-items: flex-start;
+      gap: 11px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: #fff8fb;
+    }
+
+    .check {
+      flex: 0 0 auto;
+      display: grid;
+      width: 22px;
+      height: 22px;
+      place-items: center;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--pink), var(--peach));
+      color: white;
+      font-size: .72rem;
+      font-weight: 900;
+    }
+
+    .form-intro { margin: 0 0 22px; color: var(--muted); }
+
+    form { display: grid; gap: 18px; }
+
+    .field { display: grid; gap: 7px; }
+
+    label, legend {
+      color: #55404a;
+      font-size: .88rem;
+      font-weight: 800;
+    }
+
+    .optional { color: #a28c96; font-weight: 600; }
+
+    input, select, textarea {
+      width: 100%;
+      min-height: 49px;
+      border: 1px solid #e8cdd9;
+      border-radius: 14px;
+      outline: none;
+      background: rgba(255, 255, 255, .9);
+      color: var(--ink);
+      font-size: 16px;
+      transition: border-color .18s, box-shadow .18s, transform .18s;
+    }
+
+    input, select { padding: 0 14px; }
+    textarea { min-height: 112px; padding: 13px 14px; resize: vertical; }
+    input::placeholder, textarea::placeholder { color: #b8a4ad; }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--pink);
+      box-shadow: 0 0 0 4px rgba(236, 95, 145, .12);
+    }
+
+    fieldset {
+      margin: 0;
+      padding: 0;
+      border: 0;
+    }
+
+    legend { margin-bottom: 9px; }
+
+    .choice-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 9px;
+    }
+
+    .choice {
+      position: relative;
+      display: flex;
+      min-height: 49px;
+      align-items: center;
+      gap: 9px;
+      padding: 11px 12px;
+      border: 1px solid #e8cdd9;
+      border-radius: 14px;
+      background: white;
+      cursor: pointer;
+      font-size: .9rem;
+      font-weight: 700;
+    }
+
+    .choice:has(input:checked) {
+      border-color: var(--pink);
+      background: #fff3f8;
+      box-shadow: 0 0 0 3px rgba(236, 95, 145, .09);
+    }
+
+    .choice input {
+      width: 18px;
+      min-height: 18px;
+      height: 18px;
+      margin: 0;
+      accent-color: var(--pink);
+      box-shadow: none;
+    }
+
+    .terms {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 14px;
+      border-radius: 14px;
+      background: #fff7f1;
+      font-size: .84rem;
+      cursor: pointer;
+    }
+
+    .terms input {
+      flex: 0 0 auto;
+      width: 18px;
+      min-height: 18px;
+      height: 18px;
+      margin: 2px 0 0;
+      accent-color: var(--pink);
+    }
+
+    .submit {
+      min-height: 56px;
+      padding: 14px 20px;
+      border: 0;
+      border-radius: 16px;
+      color: white;
+      background: linear-gradient(135deg, var(--pink-dark), var(--pink) 55%, var(--peach));
+      box-shadow: 0 12px 28px rgba(200, 62, 114, .28);
+      font-weight: 900;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: transform .15s, box-shadow .15s;
+    }
+
+    .submit:hover { transform: translateY(-2px); box-shadow: 0 16px 32px rgba(200, 62, 114, .32); }
+    .submit:active { transform: translateY(1px) scale(.99); }
+    .submit:disabled { cursor: wait; opacity: .72; transform: none; box-shadow: none; }
+
+    .privacy { margin: -6px 0 0; color: #9a838e; text-align: center; font-size: .76rem; }
+
+    .form-error {
+      display: none;
+      margin: -5px 0 0;
+      padding: 11px 13px;
+      border: 1px solid #efb1c4;
+      border-radius: 12px;
+      color: #a92e5d;
+      background: #fff1f6;
+      text-align: center;
+      font-size: .84rem;
+      font-weight: 700;
+    }
+
+    .form-error.show { display: block; }
+
+    .result {
+      display: none;
+      padding: 30px clamp(20px, 6vw, 48px) 40px;
+      border-top: 1px solid var(--line);
+      text-align: center;
+      background: linear-gradient(145deg, #fff1f7, #fff9ee);
+      scroll-margin-top: 16px;
+    }
+
+    .result.show { display: block; animation: reveal .55s cubic-bezier(.2, .8, .2, 1) both; }
+    .result:focus { outline: none; }
+
+    @keyframes reveal {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .result .seal { font-size: 3.6rem; }
+    .result h2 { margin: 5px 0 8px; font-size: clamp(1.7rem, 6vw, 2.55rem); }
+    .result p { max-width: 540px; margin: 0 auto; color: var(--muted); }
+
+    .contract {
+      margin: 20px auto 0;
+      padding: 15px;
+      max-width: 500px;
+      border: 1px dashed #e392ae;
+      border-radius: 15px;
+      background: rgba(255,255,255,.68);
+      font-size: .88rem;
+    }
+
+    .footer {
+      margin-top: 17px;
+      color: #927a85;
+      text-align: center;
+      font-size: .75rem;
+    }
+
+    .confetti {
+      position: fixed;
+      top: -20px;
+      z-index: 10;
+      pointer-events: none;
+      animation: fall var(--duration) linear forwards;
+    }
+
+    @keyframes fall {
+      to { transform: translate3d(var(--drift), 110vh, 0) rotate(680deg); opacity: .15; }
+    }
+
+    @media (max-width: 560px) {
+      .page { width: min(100% - 18px, 760px); padding-top: max(14px, env(safe-area-inset-top)); }
+      .topline { margin-inline: 4px; font-size: .65rem; }
+      .card { border-radius: 23px; }
+      .hero { padding-inline: 20px; }
+      .role-grid, .choice-grid { grid-template-columns: 1fr; }
+      .perk { display: grid; grid-template-columns: auto 1fr; column-gap: 11px; }
+      .perk .icon { grid-row: span 2; }
+      .perk strong { margin-top: 0; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="topline">
+      <span>Private &amp; confidential-ish</span>
+      <span class="status">Applications open</span>
+    </div>
+
+    <article class="card">
+      <header class="hero">
+        <span class="stamp">Extremely official</span>
+        <span class="hero-emoji" aria-hidden="true">💌</span>
+        <h1>Personal Assistant Wanted</h1>
+        <p class="subtitle">A rare career opportunity supporting one highly demanding boss who mainly needs help with spreadsheets, smiling, and deciding where to get dinner.</p>
+        <span class="tiny-note">One preferred candidate has already been identified 👀</span>
+      </header>
+
+      <section class="section" aria-labelledby="role-title">
+        <p class="eyebrow">The position</p>
+        <h2 id="role-title">Secretary to the CEO of Missing You</h2>
+        <p>You’ll oversee top-priority operations, maintain executive morale, and look suspiciously cute while doing it.</p>
+
+        <div class="role-grid">
+          <div class="perk"><span class="icon">🗓️</span><strong>Flexible hours</strong><span>Especially evenings, weekends, and date nights.</span></div>
+          <div class="perk"><span class="icon">💋</span><strong>Premium benefits</strong><span>Unlimited kisses, hugs, and forehead-kiss coverage.</span></div>
+          <div class="perk"><span class="icon">🍝</span><strong>Team lunches</strong><span>Excellent food, questionable sharing etiquette.</span></div>
+          <div class="perk"><span class="icon">📈</span><strong>Career growth</strong><span>Fast-track promotion to Favorite Person.</span></div>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="requirements-title">
+        <p class="eyebrow">Ideal candidate</p>
+        <h2 id="requirements-title">Suspiciously specific requirements</h2>
+        <ul class="requirements">
+          <li><span class="check">✓</span><span>Good at Excel—or at least confident enough to say “pivot table” with authority.</span></li>
+          <li><span class="check">✓</span><span>Funny, smart, pretty, and extremely cute. Being all four is unfair but required.</span></li>
+          <li><span class="check">✓</span><span>Can handle confidential information, including how obsessed the boss is with her.</span></li>
+          <li><span class="check">✓</span><span>Willing to receive frequent kisses during the shift, always subject to enthusiastic consent.</span></li>
+          <li><span class="check">✓</span><span>Available for important meetings disguised as coffee dates, cuddles, and little adventures.</span></li>
+        </ul>
+      </section>
+
+      <section class="section" aria-labelledby="apply-title">
+        <p class="eyebrow">Formal application</p>
+        <h2 id="apply-title">Tell management why it has to be you</h2>
+        <p class="form-intro">Please be honest. Flirting with the hiring manager is not only allowed—it may improve your chances.</p>
+
+        <form id="applicationForm" action="https://formspree.io/f/xrpgqgjj" method="POST">
+          <input type="hidden" name="subject" value="New Personal Assistant Application from {{ name }}">
+          <div class="field">
+            <label for="name">Full name of the cutest applicant</label>
+            <input id="name" name="name" type="text" autocomplete="name" placeholder="Your very cute name" required>
+          </div>
+
+          <div class="field">
+            <label for="qualification">Why are you perfect for this role?</label>
+            <textarea id="qualification" name="qualification" placeholder="I am clearly overqualified because…" required></textarea>
+          </div>
+
+          <div class="field">
+            <label for="excel">Your Excel skill level</label>
+            <select id="excel" name="excel" required>
+              <option value="" selected disabled>Choose your level…</option>
+              <option>I can open a spreadsheet</option>
+              <option>I know formulas and look cute using them</option>
+              <option>Pivot-table princess</option>
+              <option>I make Excel nervous</option>
+            </select>
+          </div>
+
+          <fieldset>
+            <legend>Preferred salary &amp; benefits <span class="optional">(choose all that apply)</span></legend>
+            <div class="choice-grid">
+              <label class="choice"><input type="checkbox" name="benefits" value="Daily kisses"> Daily kisses</label>
+              <label class="choice"><input type="checkbox" name="benefits" value="Unlimited cuddles"> Unlimited cuddles</label>
+              <label class="choice"><input type="checkbox" name="benefits" value="Fancy dinners"> Fancy dinners</label>
+              <label class="choice"><input type="checkbox" name="benefits" value="CEO's hoodies"> CEO’s hoodies</label>
+            </div>
+          </fieldset>
+
+          <div class="field">
+            <label for="strength">Your most dangerous office skill <span class="optional">(optional)</span></label>
+            <input id="strength" name="strength" type="text" placeholder="Making the boss forget what he was saying…">
+          </div>
+
+          <div class="field">
+            <label for="startDate">When can you start?</label>
+            <select id="startDate" name="startDate" required>
+              <option value="" selected disabled>Select one…</option>
+              <option>Immediately</option>
+              <option>After one interview date</option>
+              <option>After negotiating my kiss package</option>
+              <option>I already started, obviously</option>
+            </select>
+          </div>
+
+          <label class="terms">
+            <input type="checkbox" required>
+            <span>I acknowledge that this position may involve spontaneous compliments, dramatic eye contact, terrible jokes, and consensual workplace kisses.</span>
+          </label>
+
+          <button class="submit" id="submitButton" type="submit">Submit My Very Serious Application 💌</button>
+          <p class="form-error" id="formError" role="alert">The application hit a tiny office emergency. Please try submitting it again.</p>
+          <p class="privacy">Your answers are sent privately to the hiring manager—not posted on GitHub.</p>
+        </form>
+      </section>
+
+      <section class="result" id="result" aria-live="polite" tabindex="-1">
+        <div class="seal" aria-hidden="true">💖</div>
+        <h2 id="resultTitle">Application received!</h2>
+        <p id="resultCopy"></p>
+        <div class="contract"><strong>Next step:</strong> Report to the hiring manager for your final interview, which will include one date, several compliments, and a kiss package negotiated entirely on your terms.</div>
+      </section>
+    </article>
+
+    <p class="footer">Equal-opportunity admirer • Position created for one exceptional applicant only</p>
+  </main>
+
+  <script>
+    const form = document.getElementById('applicationForm');
+    const result = document.getElementById('result');
+    const resultTitle = document.getElementById('resultTitle');
+    const resultCopy = document.getElementById('resultCopy');
+    const submitButton = document.getElementById('submitButton');
+    const formError = document.getElementById('formError');
+
+    form.addEventListener('submit', async function (event) {
+      event.preventDefault();
+      if (!form.reportValidity()) return;
+
+      const name = document.getElementById('name').value.trim() || 'Beautiful Applicant';
+      const selected = Array.from(form.querySelectorAll('input[name="benefits"]:checked')).map(item => item.value);
+      const benefits = selected.length ? selected.join(', ') : 'a custom premium package';
+
+      formError.classList.remove('show');
+      submitButton.disabled = true;
+      submitButton.textContent = 'Sending to the Hiring Manager… 💌';
+
+      try {
+        const response = await fetch(form.action, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { Accept: 'application/json' }
+        });
+
+        if (!response.ok) throw new Error('Submission failed');
+
+        resultTitle.textContent = `Congratulations, ${name}!`;
+        resultCopy.textContent = `After a completely unbiased 0.3-second review, you are officially the leading—and only—candidate. Your requested benefits (${benefits}) have been forwarded directly to the CEO for immediate approval.`;
+        result.classList.add('show');
+        launchConfetti();
+
+        window.setTimeout(() => {
+          result.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          result.focus({ preventScroll: true });
+        }, 120);
+      } catch (error) {
+        formError.classList.add('show');
+      } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = 'Submit My Very Serious Application 💌';
+      }
+    });
+
+    function launchConfetti() {
+      const pieces = ['💗', '💖', '✨', '🌸', '💌'];
+      const count = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 30;
+      for (let i = 0; i < count; i += 1) {
+        const piece = document.createElement('span');
+        piece.className = 'confetti';
+        piece.textContent = pieces[Math.floor(Math.random() * pieces.length)];
+        piece.style.left = `${Math.random() * 100}vw`;
+        piece.style.fontSize = `${14 + Math.random() * 16}px`;
+        piece.style.setProperty('--duration', `${2.8 + Math.random() * 2.2}s`);
+        piece.style.setProperty('--drift', `${-80 + Math.random() * 160}px`);
+        piece.style.animationDelay = `${Math.random() * .45}s`;
+        document.body.appendChild(piece);
+        window.setTimeout(() => piece.remove(), 5500);
+      }
+    }
+  </script>
+</body>
+</html>
